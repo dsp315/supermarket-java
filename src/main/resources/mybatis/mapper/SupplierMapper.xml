@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tengke.supermarket.mapper.SupplierMapper">
+
+    <!--根据供货商编号查找供货商-->
+    <select id="selectSupplierId" resultType="supplier">
+        select * from supplier where sp_id = #{supplierId};
+    </select>
+
+
+    <!--分页查询所有供应商信息-->
+    <select id="selectAllSupplier" resultType="supplier">
+        select * from supplier limit #{start},#{size};
+    </select>
+
+    <!--查找供应商信息记录数-->
+    <select id="countSuppliers" resultType="int">
+        select count(*) from supplier;
+    </select>
+
+    <!--添加供应商-->
+    <insert id="insert">
+        INSERT INTO supplier
+            (sp_name, location, sp_tel, description)
+        VALUES(#{spName}, #{location}, #{spTel}, #{description});
+
+    </insert>
+</mapper>

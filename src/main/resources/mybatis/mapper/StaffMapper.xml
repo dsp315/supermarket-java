@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tengke.supermarket.mapper.StaffMapper">
+    <resultMap id="BaseResultMap" type="com.tengke.supermarket.dto.StaffDTO">
+        <id column="sf_id" property="sfId"/>
+        <result column="sf_name" property="sfName"/>
+        <result column="identity_id" property="identityId"/>
+        <result column="sf_tel" property="sfTel"/>
+        <result column="sex" property="sex"/>
+        <result column="password" property="password"/>
+        <result column="sf_status" property="sfStatus"/>
+        <result column="address" property="address"/>
+        <result column="email" property="email"/>
+    </resultMap>
+    <!--查找员工总数-->
+    <select id="getCount" resultType="java.lang.Integer">
+        select count(1) from staff s
+            <where>
+                s.status = 0
+                <if test="search != null and search != ''">
+                    and s.sf_name regexp #{search}
+                </if>
+            </where>
+
+    </select>
+    <!-- 根据页码查找员工信息 -->
+    <select id="getStaffsByPage" resultType="com.tengke.supermarket.model.Staff">
+        select sf_id, sf_name, identity_id, sf_tel, sex, sf_status, address, email
+        from staff s
+        <where>
+            s.status = 0
+        <if test="search != null and search != ''">
+            and s.sf_name regexp #{search}
+        </if>
+        <if test="start !=null and pageSize !=null">
+            limit #{start},#{pageSize}
+        </if>
+        </where>
+    </select>
+    <!--根据员工编号查找员工-->
+    <select id="selectStaffById" resultType="Staff">
+        select * from staff where s.status = 0 and sf_id = #{sfId};
+    </select>
+
+    <!--增加员工信息-->
+    <insert id="addStaff" parameterType="com.tengke.supermarket.model.Staff">
+
+        INSERT INTO staff
+        (sf_name, identity_id, sf_tel, sex, sf_status, address, email)
+        VALUES(#{sfName}, #{identityId}, #{sfTel}, #{sex}, 1, #{address}, #{email});
+    </insert>
+
+    <!-- 修改员工 -->
+   <update id="updateStaff" parameterType="com.tengke.supermarket.model.Staff">
+
+       UPDATE staff
+       <set>
+           <if test="sfTel!=null"> sf_tel=#{sfTel},</if>
+           <if test="address!=null"> address=#{address},</if>
+           <if test="email!=null"> email=#{email}</if>
+       </set>
+       <where>
+           sf_id=#{sfId}
+       </where>
+   </update>
+
+  <!--删除员工信息-->
+   <delete id="deleteStaff" parameterType="int">
+       delete from staff where sf_id=#{sfId};
+   </delete>
+</mapper>

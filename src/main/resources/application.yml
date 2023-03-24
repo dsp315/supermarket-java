@@ -1,0 +1,28 @@
+server:
+  port: 7777
+
+spring:
+  datasource:
+    name: dev
+    type: com.alibaba.druid.pool.DruidDataSource
+    #url: ENC(UNlTaTVGw9egZdb9uR5kRBMVA7qDJ6ty2IbkFNRrBTNtS4TnBDklQqMnURMJVtgK+U7tJa9WxmWIqJAsYGRJ3hgLH5sfNsszk6wwVEcEAJfKMOD4x+PBqAh2SqZW/LuB)
+    #username: ENC(faG9fIznLomyZa/gimSgJw==)
+    #password: ENC(bjpJyn6HwP81Vvx2Gq572Q==)
+    url: jdbc:mysql://localhost:3306/supermarket?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+jpa:
+  show-sql: true
+  properties:
+    hibernate:
+      format_sql: true
+
+mybatis:
+  type-aliases-package: com.tengke.supermarket.model
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  config-location: classpath:mybatis/mybatis-config.xml
+
+jasypt:
+  encryptor:
+    password: ${ENCRYPTOR_PASSWORD}

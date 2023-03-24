@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tengke.supermarket.mapper.PurchaseMapper">
+
+    <!--将数据库表字段映射到实体类属性名-->
+    <resultMap id="result" type="com.tengke.supermarket.model.PurchaseRecord">
+        <result column="p_id" property="purchaseId"/>
+        <result column="sp_id" property="supplierId"/>
+        <result column="sf_id" property="staffId"/>
+        <result column="p_date" property="purchaseDate"/>
+        <result column="gds_id" property="goodsId"/>
+        <result column="p_price" property="price"/>
+        <result column="p_amount" property="amount"/>
+    </resultMap>
+
+    <!--添加一条进货记录-->
+    <insert id="addPurchase" parameterType="com.tengke.supermarket.model.Purchase" useGeneratedKeys="true" keyProperty="purchaseId">
+        insert into purchase( sp_id, sf_id, p_data)
+        values (#{supplierId}, #{staffId}, #{purchaseDate})
+    </insert>
+
+    <!--查询id-->
+    <select id="selectPid" parameterType="com.tengke.supermarket.model.Purchase">
+        select p_id from purchase
+        <where>
+            and sp_id = #{supplierId}
+            and sf_id = #{staffId}
+            and p_data = #{purchaseDate}
+        </where>
+    </select>
+
+    <!--查询所有进货记录-->
+    <select id="selectAllPurRecord" resultType="com.tengke.supermarket.model.PurchaseRecord">
+        select *
+        from purchase_record
+        order by p_id;
+    </select>
+
+    <!-- 分页查找进货记录 -->
+    <select id="selectPurRecordByPage" resultType="com.tengke.supermarket.model.PurchaseRecord" resultMap="result">
+        select * from purchase_record where gds_id in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        <if test="start !=null and pageSize !=null">
+            limit #{start},#{pageSize}
+        </if>
+    </select>
+
+    <!--根据进货编号查询销售记录-->
+    <select id="selectPurRecordById" resultType="com.tengke.supermarket.model.PurchaseRecord">
+        select *
+        from purchase_record
+        where p_id = #{purchaseId};
+    </select>
+
+    <select id="getCount" resultType="int" parameterType="list">
+        select count(*) from purchase_record
+        <if test="list!=null">
+            where gds_id in
+            <foreach collection="list" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        ;
+    </select>
+
+    <select id="selectPurchaseById" resultType="com.tengke.supermarket.model.Purchase">
+        select * from purchase where p_id = #{purchaseId}
+    </select>
+</mapper>
+
